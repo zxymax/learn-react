@@ -64,7 +64,7 @@ export default App;
 ```
 
 > #### JSX 语法简介
-`JSX` 就是 `JavaScript` 与 `XML` 结合的一种格式。可以方便的利用 `HTML` 来创建虚拟 `DOM`。当遇到 $\color{#ff502c}{<}$ 时，`JSX` 就当作 `HTML` 解析；遇到 $\color{#ff502c}{\{}$ 就当作 `JavaScript` 解析。
+`JSX` 就是 `JavaScript` 与 `XML` 结合的一种格式。可以方便的利用 `HTML` 来创建虚拟 `DOM`。当遇到 `>` 时，`JSX` 就当作 `HTML` 解析；遇到 `{` 就当作 `JavaScript` 解析。
 
 > ##### 组件与普通 JSX 语法区别
 自定义的组件首写字母要大写，而 `JSX` 语法是小写字母开头的。
@@ -85,4 +85,49 @@ class App extends Component {
 }
 
 export default App;
+```
+> #### 新建 YoungerSister.js 组件
+```js
+import React, { Component } from 'react';
+
+class YoungerSister extends Component {
+  render() {
+    return (
+      <div>
+        <div><input type="text" /><button>增加服务</button></div>
+        <ul>
+          <li>头部按摩</li>
+          <li>精油推背</li>
+        </ul>
+      </div>
+    )
+  }
+}
+
+export default YoungerSister;
+```
+> ##### 组件外层包裹原则
+React 要求必须在组件的最外层有一层包裹层
+> ##### Fragment 标签
+Fragment 的作用是当组件不需要这个最外层包裹标签，会用到这个标签。
+修改 `YoungerSister` 组件，代码如下：
+```js
+// 引入 Fragment
+import React, { Component, Fragment } from 'react';
+
+class YoungerSister extends Component {
+  render() {
+    return (
+      <Fragment>
+        <div><input type="text" /><button>增加服务</button></div>
+        <ul>
+          <li>头部按摩</li>
+          <li>精油推背</li>
+        </ul>
+      </Fragment>
+    )
+  }
+}
+
+export default YoungerSister;
 ```
