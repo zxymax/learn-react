@@ -31,3 +31,58 @@ yarn start or npm start
 * `index.css`：`index.js` 里面的 css 文件。
 * `app.js`：这个文件相当于一个方法模块，也是一个简单的模块化编程。
 * `serviceWorker.js`：用于移动端开发，`PWA` 必须用到这个文件，这个文件相当于有了离线浏览功能。
+
+#### 编写 HelloWorld.js 组件
+> ##### 入口文件 src/index.js
+```js
+// 重要文件 必须引入
+import React from 'react';
+// 重要文件 必须引入
+import ReactDOM from 'react-dom';
+// App 组件
+import App from './App';
+
+// 使用 JSX 语法将 App 模块 渲染到了 root ID 上，root ID 是在 public/index.html 中
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+> ##### App.js 组件
+```js
+import React, { Component } from 'react';
+
+class App extends Component {
+  render() {
+    //  JSX 语法
+    return (
+      <div>
+        Hello, Jorna
+      </div>
+    )
+  }
+}
+//  将 App 组件导出
+export default App;
+```
+
+> #### JSX 语法简介
+`JSX` 就是 `JavaScript` 与 `XML` 结合的一种格式。可以方便的利用 `HTML` 来创建虚拟 `DOM`。当遇到 $\color{#ff502c}{<}$ 时，`JSX` 就当作 `HTML` 解析；遇到 $\color{#ff502c}{\{}$ 就当作 `JavaScript` 解析。
+
+> ##### 组件与普通 JSX 语法区别
+自定义的组件首写字母要大写，而 `JSX` 语法是小写字母开头的。
+
+> ##### JSX 中使用 三元运算符
+```js
+import React form 'react';
+const Component = React.Component;
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        { false ? 'Jorna' : 'nothing!' }
+      </div>
+    )
+  }
+}
+
+export default App;
+```
