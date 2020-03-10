@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import YoungerSisterItem from './YoungerSIsterItem';
 
 class YoungerSister extends Component {
   constructor(props) {
@@ -7,9 +8,9 @@ class YoungerSister extends Component {
       inputValue: '',
       list: ['精油推背', '基础按摩']
     }
+    this.deleteItem = this.deleteItem.bind(this)
   }
   inputChange(e) {
-    console.log(e.target.value)
     this.setState({
       inputValue: e.target.value
     })
@@ -17,6 +18,14 @@ class YoungerSister extends Component {
   addList() {
     this.setState({
       list: [...this.state.list, this.state.inputValue]
+    })
+  }
+  deleteItem(id) {
+    const list = this.state.list
+    console.log(id)
+    list.splice(id, 1)
+    this.setState({
+      list
     })
   }
   render() {
@@ -28,7 +37,15 @@ class YoungerSister extends Component {
         </div>
         <ul>
           {
-            this.state.list.map((item, index) => <li key={index+item}>{item}</li>)
+            this.state.list.map((item, index) => {
+              return (
+                <YoungerSisterItem
+                  key={index+item}
+                  content={item}
+                  index={index}
+                  deleteItem={()=>this.deleteItem(index)}/>
+              )
+            })
           }
         </ul>
       </div>

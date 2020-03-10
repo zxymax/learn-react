@@ -243,3 +243,164 @@ deleteItem(id) {
   })
 }
 ```
+### 组件拆分
+> #### 新建 `YoungerSisterItem.js` 服务菜单组件
+```js
+import React, { Component } from 'react'; // 快捷键 imrc
+
+class YoungerSisterItem extends Component { // 快捷键 cc
+  render() {
+    return (
+      <div>Younger Sister</div>
+    )
+  }
+}
+
+export default YoungerSisterItem;
+```
+更新 `YoungerSister.js` 组件代码，将 `YoungerSisterItem` 组件你导入进来
+```js
+import React, { Component } from 'react';
+// 导入组件
+import YoungerSisterItem from './YoungerSisterItem';
+
+class YoungerSister extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputValue: '',
+      list: ['精油推背', '基础按摩']
+    }
+  }
+  inputChange(e) {
+    console.log(e.target.value)
+    this.setState({
+      inputValue: e.target.value
+    })
+  }
+  addList() {
+    this.setState({
+      list: [...this.state.list, this.state.inputValue]
+    })
+  }
+  deleteItem(id) {
+    let list = this.state.list
+    list.splice(id, 1)
+    this.setState({
+      list
+    })
+  }
+  render() {
+    return (
+      <div>
+        <div>
+          <input type="text" value={this.state.inputValue} onChange={this.inputChange.bind(this)} />
+          <button onClick={this.addList.bind(this)}>增加服务</button>
+        </div>
+        <ul>
+          {
+            this.state.list.map((item, index) => {
+              return (
+                <YoungerSisterItem />
+              )
+            })
+          }
+        </ul>
+      </div>
+    )
+  }
+}
+```
+> ### 父子组件传值
+> ##### 父向子组件传值，父组件向子组件传递内容，靠属性的形式传递
+`content` 自定义属性，子组件用来接收 `item` 值。
+```jsx
+<YoungerSister content={item}/>
+```
+> ##### 子组件通过 props 接收
+```jsx
+  render() {
+    return (
+      <div>{this.props.content}</div>
+    )
+  }
+```
+> ##### 子组件向父组件传值
+`YoungerSisterItem` 子组件定义删除方法
+- 子组件调用父组件方法，把方法传递给子组件即可，这里也要进行 `this` 绑定，如果不绑定 `this`，就无法找到父组件的方法
+```js
+import React, { Component } from 'react'; // 快捷键 imrc
+
+class YoungerSisterItem extends Component { // 快捷键 cc
+  handleClick() {
+    // 调用父组件删除方法，以及传过来的索引值
+    this.props.deleteItem(this.props.index)
+  }
+  render() {
+    return (
+      <div onClick={this.handleClick.bind(this)}>Younger Sister</div>
+    )
+  }
+}
+
+export default YoungerSisterItem;
+```
+更新父组件 `YoungerSister` 代码：
+```js
+import React, { Component } from 'react';
+// 导入组件
+import YoungerSisterItem from './YoungerSisterItem';
+
+class YoungerSister extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputValue: '',
+      list: ['精油推背', '基础按摩']
+    }
+  }
+  inputChange(e) {
+    console.log(e.target.value)
+    this.setState({
+      inputValue: e.target.value
+    })
+  }
+  addList() {
+    this.setState({
+      list: [...this.state.list, this.state.inputValue]
+    })
+  }
+  deleteItem(id) {
+    let list = this.state.list
+    list.splice(id, 1)
+    this.setState({
+      list
+    })
+  }
+  render() {
+    return (
+      <div>
+        <div>
+          <input type="text" value={this.state.inputValue} onChange={this.inputChange.bind(this)} />
+          <button onClick={this.addList.bind(this)}>增加服务</button>
+        </div>
+        <ul>
+          {
+            this.state.list.map((item, index) => {
+              return (
+                <YoungerSisterItem
+                  key={index+item}
+                  content={item}
+                  index={index}
+                  deleteItem={()=> {this.deleteItem(index)}}
+                   />
+              )
+            })
+          }
+        </ul>
+      </div>
+    )
+  }
+}
+```
+```
