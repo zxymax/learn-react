@@ -131,3 +131,115 @@ class YoungerSister extends Component {
 
 export default YoungerSister;
 ```
+> #### 响应式设计和数据绑定
+React 是通过数据进行驱动，改变界面中的效果。React 会根据数据的变化，会自动完成界面的改变。
+修改 `YoungerSister.js` 定义构造函数 `constructor`，代码如下：
+```js
+// js 的构造函数，由于其他任何函数执行
+constructor(props) {
+  super(props) // 调用 父类 的构造函数，固定写法
+  this.state = {
+    inputValue: '', // input 中的值
+    list: []  // 服务列表
+  }
+}
+```
+将 `inputValue` 的值绑定到 `input` 框中，代码如下：
+```jsx
+<input type="text" value={this.state.inputValue} />
+```
+> ##### 绑定事件
+```jsx
+<input type="text" value={this.state.inputValue} onChange={this.inputChange} />
+```
+`render` 方法下创建 `inputChang` 方法
+```jsx
+inputChange(e) {
+  // 获取到input 中的值  e.target.value
+  console.log(e.target.value)
+  // 修改 input 中的值，以下是错误的示范
+  // this.state.inputValue = e.target.value
+
+}
+```
+> ###### 两个比较容易犯的错误
+- 一个是 `this` 指向不对，需要重新使用 `bind` 设置一下指向。
+- 一个是 React 中改变值需要使用 `this.setState` 方法。
+重新修改将 `inputValue` 的值绑定到 `input` 框中，代码如下：
+```jsx
+<input type="text" value={this.state.inputValue} onChange={this.inputChange.bind(this)} />
+```
+重新修改 `render` 下 `inputChange` 方法
+```jsx
+inputChange(e) {
+  console.log(e.target.value)
+  this.setState({
+    inputValue: e.target.value
+  })
+}
+```
+> #### 让列表数据化
+修改 `YoungerSister.js`，更新构造函数代码
+```js
+constructor(props) {
+  super(props)
+  this.state = {
+    inputValue: 'Jorna',
+    list: ['基础按摩', '精油推背']  // 给 list 数组附加初始值
+  }
+}
+```
+循环 `this.state.list` 数组数据到 JSX 中并添加 `key` 属性值，代码如下：
+```jsx
+render() {
+    return (
+      <Fragment>
+        <div><input type="text" value={this.state.inputValue} onChange={this.inputChange.bind(this)} /><button>增加服务</button></div>
+        <ul>
+          {
+            this.state.list.map((item, index) => {
+              return (
+                <li key={index+item}>{item}</li>
+              )
+            })
+          }
+        </ul>
+      </Fragment>
+    )
+  }
+```
+> ##### 给按 button 钮增加事件
+```jsx
+<button onClick={this.addList.bind(this)}>增加服务</button>
+```
+`render` 下增加 `addList` 方法，通过 `...` ES6扩展运算符将 `this.state.list` 数据进行分解，然后组合，推荐此写法。
+```js
+addList() {
+  this.setState({
+    list: [...this.state.list, this.state.inputValue]
+  })
+}
+```
+> ##### 数组下标的传递
+如果要删除数组中的某一项，需要借助下标来完成删除事件的操作，将数组的下标传递给方法
+```jsx
+<ul>
+          {
+            this.state.list.map((item, index) => {
+              return (
+                <li key={index+item} onClick={this.deleteItem.bind(this, index)}>{item}</li>
+              )
+            })
+          }
+</ul>
+```
+`render` 下编写 `deleteItem` 删除方法
+```js
+deleteItem(id) {
+  let list = this.state.list
+  list.splice(id, 1)
+  this.setState({
+    list
+  })
+}
+```
